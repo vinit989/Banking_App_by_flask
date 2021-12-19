@@ -16,10 +16,9 @@ app = Flask(__name__)
 
 #database Intializing
 
-if(local_server):
-       app.config['SQLALCHEMY_DATABASE_URI'] = params['local_uri'] 
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = params['prod_uri']
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///banking.db"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 db = SQLAlchemy(app)
 
@@ -41,9 +40,11 @@ class Transfers(db.Model):
     reciever_email = db.Column(db.String(50), nullable=False)
     time = db.Column(db.String(6), nullable=False)
     
+    
 
 @app.route('/')
 def home():
+    
     return render_template('home.html')
 
 
@@ -111,6 +112,5 @@ def payment(sno):
     else:
         return render_template('payment.html', customer = customer, sno=sno, email=email)
 
-            
-
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True, port=8000)
